@@ -1,0 +1,24 @@
+.global__container{
+    width: 100vw;
+    display: flex;
+    justify-content: space-around;
+    margin-top: 30px;
+}
+
+.container__options{
+    height: 30vh;
+    overflow-y: scroll;
+    width: 30vw;
+    border: solid 1px red ;
+    padding: 20px;
+
+}
+
+.option__select:hover{
+    background-color: grey;
+    color: white;
+    transition: 1s;
+    padding: 10px;
+    border-radius: 15px;
+    cursor: pointer;
+}
