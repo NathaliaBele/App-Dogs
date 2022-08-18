@@ -5,7 +5,8 @@ const dataInitial = {
     divitionPage: [],
     eigthDogs: [],
     allDogsGlobal: [],
-    temperaments: []
+    temperaments: [],
+    currentPageGlobal: 0
 }
 
 const GET_DOGS_OK = 'GET_DOGS_OK'
@@ -18,6 +19,8 @@ const FILTER_BY = 'FILTER_BY'
 const ALL_DOGS_GLOBAL = 'ALL_DOGS_GLOBAL'
 const GET_TEMPERAMENTS = 'GET_TEMPERAMENTS'
 const FILTER_TEMPERAMENTS = 'FILTER_TEMPERAMENTS'
+const FILTER_AZ = 'FILTER_AZ'
+const CHANGE_PAGE = 'CHANGE_PAGE'
 //reducers
 export default function dogsReducer(state = dataInitial, action) {
     switch (action.type) {
@@ -26,10 +29,11 @@ export default function dogsReducer(state = dataInitial, action) {
         case GET_DIVISION_PAGE:
             return { ...state, divitionPage: action.payload }
         case EIGTH_DOGS_PAGE:
-            return { ...state, eigthDogs: action.payload }
+            return { ...state, eigthDogs: action.payload.update }
         case SEARCH_DOGS_OK:
             return { ...state, allDogs: action.payload }
         case GET_BY_AZ_ZA:
+
             return { ...state, allDogs: action.payload }
         case GET_BY_WEIGHT:
             return { ...state, allDogs: action.payload }
@@ -41,6 +45,15 @@ export default function dogsReducer(state = dataInitial, action) {
             return { ...state, temperaments: action.payload }
         case FILTER_TEMPERAMENTS:
             return { ...state, allDogs: action.payload }
+
+        case FILTER_AZ:
+            return { ...state, allDogs: action.payload }
+
+        case CHANGE_PAGE:
+            return {
+                ...state,
+                currentPageGlobal: action.payload
+            }
         default:
             return state;
     }
@@ -49,12 +62,14 @@ export default function dogsReducer(state = dataInitial, action) {
 
 
 //acciones
-export const getDogsAction = (rta) => async (dispatch) => {
+export const getDogsAction = (rta) => (dispatch) => {
+
+    let body = rta.map(r=>r)
 
     try {
         dispatch({
             type: GET_DOGS_OK,
-            payload: rta
+            payload: body
         })
     } catch (error) {
         console.log(error)
@@ -63,7 +78,7 @@ export const getDogsAction = (rta) => async (dispatch) => {
 
 }
 
-export const getDivisionPage = (dogs) => (dispatch) => { //
+export const getDivisionPage = (dogs) => (dispatch) => {
 
     try {
         let arr = [];
@@ -81,24 +96,16 @@ export const getDivisionPage = (dogs) => (dispatch) => { //
 
 export const getPageDogs = (currentPageP, doggies) => (dispatch) => { //OBTENER CADA PAGINA, y mandar los 8 perros
     let update = [];
-    if (currentPageP === 0) {
-        for (let i = 0; i < 8; i++) {
-            update.push(doggies[i]);
-        }
-        dispatch({
-            type: EIGTH_DOGS_PAGE,
-            payload: update
-        });
-    } else {
-        for (let i = currentPageP * 8; i < currentPageP * 8 + 8; i++) {
-            update.push(doggies[i]);
-        }
-        dispatch({
-            type: EIGTH_DOGS_PAGE,
-            payload: update
-        });
+    for (let i = currentPageP * 8; i < currentPageP * 8 + 8; i++) {
+        // console.log(i);
+        update.push(doggies[i]);
     }
-    update = [];
+
+    dispatch({
+        type: EIGTH_DOGS_PAGE,
+        payload: { update: update, currentPage: currentPageP }
+    });
+
 
 
 }
@@ -107,6 +114,7 @@ export const getDogsByNameAction = (search) => async (dispatch) => {
 
     try {
         const res = await axios.get('http://localhost:3001/dogs?name=' + search)
+        console.log(res.data);
         dispatch({
             type: SEARCH_DOGS_OK,
             payload: res.data
@@ -153,6 +161,9 @@ export const orderByWeight = (dogs, option) => (dispatch) => {
 
         return a.numberWeight - b.numberWeight
     })
+
+    console.log(rta.length)
+
     dispatch({
         type: GET_BY_WEIGHT,
         payload: option === 'ASC' ? rta : rta.reverse()
@@ -180,11 +191,14 @@ export const filterDogs = (dogs, option) => (dispatch) => {
 
 }
 
-export const allDogGlobal = (dogs) => (dispatch) => {
+export const allDogGlobal = () => async (dispatch) => {
     try {
+
+        const rta = await fetch("http://localhost:3001/dogs")
+        const body = await rta.json();
         dispatch({
             type: ALL_DOGS_GLOBAL,
-            payload: dogs
+            payload: body
         })
     } catch (error) {
         console.log(error)
@@ -242,3 +256,31 @@ export const filterByTemperaments = (dogs, option) => async (dispatch) => {
 
 }
 
+export const orderByAzAction = (dogs, option) => (dispatch) => {
+
+    let dogi = dogs.map((d) => d)
+
+    let rta = dogi.sort((a, b) => {
+        if (a.name < b.name) {
+            return -1
+        } else if (a.name > b.name) {
+            return 1
+        } else {
+            return 0
+        }
+    })
+    dispatch({
+        type: GET_BY_AZ_ZA,
+        payload: option == 'A-z' ? rta : rta.reverse()
+    })
+}
+
+
+export const newCurrentPage = (p) => (dispatch) => {
+    dispatch(
+        {
+            type: CHANGE_PAGE,
+            payload: p
+        }
+    )
+}

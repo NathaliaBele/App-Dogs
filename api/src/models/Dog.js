@@ -19,18 +19,18 @@ module.exports = (sequelize) => {
       allowNull: false,
     },
       height: {
-      type: DataTypes.INTEGER(),
+      type: DataTypes.STRING(),
       allowNull: false,
     },
     weight:{
-      type: DataTypes.INTEGER(),
+      type: DataTypes.STRING(),
       allowNull: false,
     },
     lifeSpan: {
       type: DataTypes.STRING(),
     },
     temperament: {
-      type: DataTypes.ARRAY(DataTypes.STRING())
+      type: DataTypes.STRING()
     },
     originApi: {
       type: DataTypes.BOOLEAN,

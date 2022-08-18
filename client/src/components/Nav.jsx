@@ -1,12 +1,15 @@
-import React from 'react'
-import {Link} from 'react-router-dom'
+import React from "react";
+import { Link } from "react-router-dom";
+import "./Nav.css";
 export default function Nav() {
   return (
-    <div>
+    <div className="optionNavBar">
       <ul>
-        <li><Link to ='/Home'> Dogs</Link></li>
-        <li><Link to ='/CreateRace'> Add Dog</Link></li>
+        <Link className="link" to="/Home"> Dogs</Link>
+      </ul>
+      <ul>
+        <Link className="link" to="/CreateRace"> Add Dog</Link>
       </ul>
     </div>
-  )
+  );
 }

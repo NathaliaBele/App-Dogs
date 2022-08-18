@@ -1,35 +1,42 @@
-import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import Nav from './Nav';
-import SearchBar from './SearchBar';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import Nav from "./Nav";
+import SearchBar from "./SearchBar";
 
-
+import "./DetailDog.css";
 
 export default function DetailDog() {
-    const [dog, setDog] = useState([])
-    let {id} = useParams();
-    useEffect(()=>{
-        fetch(`http://localhost:3001/dogs/${id}`).then((respuesta) =>
-     respuesta.json().then((body)=>{
-      let [doggy] = body
-      setDog(doggy)
-     })
+  const [dog, setDog] = useState([]);
+  let { id } = useParams();
+  useEffect(() => {
+    fetch(`http://localhost:3001/dogs/${id}`).then((respuesta) =>
+      respuesta.json().then((body) => {
+        let [doggy] = body;
+        setDog(doggy);
+      })
     );
-    },[])
-    return (
+  }, []);
+  return (
     <div>
-      <Nav/>
-      <SearchBar/>
-        <div>
-        <h1>Name: {dog.name}</h1>
-        <img src={dog.image} alt=''/>
-        <h1>Temperament: {dog.temperament}</h1>
-        <h1>Weight: {dog.weight}</h1>
+      <div className="navbar">
+        <SearchBar />
+        <Nav />
+      </div>
+      <div className="containerDetail">
         
+        <div className="cardDetail">
 
+          <div className="containerImage">
+            <img src={dog.image ? dog.image  : ''} alt="" className="cardImage" />
+          </div>
+
+          <div className="containerDataDetail">
+            <h1 className="titleDetail">{dog.name}</h1>
+            <h1 className="temperamentDetail">Temperament: {dog.temperament}</h1>
+            <h1 className="weigthDetail">Weight: {dog.weight}</h1>
+          </div>
         </div>
-
-
+      </div>
     </div>
-  )
+  );
 }

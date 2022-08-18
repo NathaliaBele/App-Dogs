@@ -1,0 +1,48 @@
+.home{
+
+  
+}
+
+.container__cards{
+width: 100%;
+min-height: 100vh;
+height: 430;
+display: flex;
+flex-wrap: wrap;
+justify-content: center;
+margin: auto
+
+}
+
+.navbar{
+    background-color:teal;
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: center;
+
+}
+
+
+.filterNav{
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    justify-content: space-evenly;
+    background-color: aliceblue;
+}
+
+.paginatorContainer{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.sourceTemp{
+justify-content: space-around;
+}

@@ -6,15 +6,16 @@ export const Card = ({ dog }) => {
   return (
     <Fragment>
       {dog !== undefined && (
-        <div className="card__country">
+        
+        <div className="card__dog">
+          <h4>{dog.name}</h4>
           <img
-            className="card__country__img"
+            className="card__dog__img"
             src={dog === undefined ? "" : dog.image}
             alt=""
           />
-          <h1>{dog.name}</h1>
-          <h1>{dog.temperament}</h1>
-          <h1>{dog.weight}</h1>
+          <p>{dog.temperament}</p>
+          <p>{dog.weight}</p>
           <button className="card__dog__button">
             {" "}
             <Link className="card__dog__link" to={`/DetailDog/${dog.id}`}> 

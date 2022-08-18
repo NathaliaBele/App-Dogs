@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import Nav from "./Nav";
-
+import SearchBar from "./SearchBar";
 import { getTemperaments } from "../redux/dogsDucks";
 import "./CreateRace.css";
 export default function CreateRace() {
@@ -41,15 +40,20 @@ export default function CreateRace() {
       status: false,
       msj: "",
     },
+    image: {
+      status: false,
+      msj: "",
+    },
   });
 
   const [input, setInput] = useState({
     name: "",
-    minHeight: 0,
-    maxHeight: 0,
-    minWeight: 0,
-    maxWeight: 0,
+    minHeight: "",
+    maxHeight: "",
+    minWeight: "",
+    maxWeight: "",
     lifeSpan: "",
+    image: "",
   });
 
   function onChangeInput(e) {
@@ -68,6 +72,31 @@ export default function CreateRace() {
     ) {
       return;
     }
+    if (e.target.name === "minWeight" && e.target.value > input.maxWeight) {
+      setInputErrors({
+        ...inputErrors,
+        minWeight: {
+          status: true,
+          msj: "Este valor no puede superar el Máximo",
+        },
+      });
+      return;
+    } else if (
+      e.target.name === "maxWeight" &&
+      e.target.value < input.minWeight
+    ) {
+      return;
+    }
+
+    if (e.target.name === "image" && e.target.value.trim().length < 3) {
+      setInputErrors({
+        ...inputErrors,
+        image: {
+          status: true,
+          msj: "URL no valida",
+        },
+      });
+    }
 
     setInput({
       ...input,
@@ -75,127 +104,280 @@ export default function CreateRace() {
     });
   }
 
-  function onHandleSubmit(event) {
+  async function onHandleSubmit(event) {
     event.preventDefault();
+
+    // validación 1 campos vacios.
+
+    for (const key in input) {
+          if(input[key].length === 0 ){
+            alert('Los campos no pueden estar vacios')
+            return
+          }
+
+    }
+
+    for (const key in inputErrors) {
+        if(inputErrors[key].status === true){
+          alert('Corrija los errores')
+          return
+        }
+    }
+
+
+
+    let arrStr = optionSelects.map((r) => ` ${r}`);
+
+    let bodySend = {
+      name: input.name,
+      image: input.image,
+      height: `${input.minHeight} - ${input.maxHeight}`,
+      weight: `${input.minWeight} - ${input.maxWeight}`,
+      temperament: arrStr.toString(),
+      lifeSpan: input.lifeSpan,
+    };
+    const save = await fetch("http://localhost:3001/dogs/", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(bodySend),
+    });
+
+    const rta = await save.json();
+    if (rta.id) {
+      setInput({
+        name: "",
+        minHeight: "",
+        maxHeight: "",
+        minWeight: "",
+        maxWeight: "",
+        lifeSpan: "",
+        image: "",
+      });
+      setOptionSelects([]);
+      alert(`EL perro: ${rta.name} ha sido creado con exito`);
+    } else if(!rta.id){
+
+      alert(
+        `EL perro: ${rta.name} no ha sido creado, por favor valide los campos`
+      );
+    }
   }
 
   return (
     <div>
-      <Nav />
-      <form onSubmit={onHandleSubmit}>
-        <label> Name </label>
-        <input
-          onChange={(e) => {
-            if (e.target.value === "") {
-              setInputErrors({
-                ...inputErrors,
-                name: { status: true, mjs: "El campo tiene que estar lleno" },
-              });
-              onChangeInput(e);
-            } else {
-              setInputErrors({
-                ...inputErrors,
-                name: { status: false, mjs: "El campo tiene que estar lleno" },
-              });
-            }
-            onChangeInput(e);
-          }}
-          name="name"
-          value={input.name}
-        />
+      <div className="navbar">
+        <SearchBar />
+        <Nav />
+      </div>
+      <div className="containerCreate">
+        <form className="form" onSubmit={onHandleSubmit}>
+          <div className="headerCreate"></div>
+          <p className="titleForm">CREATE YOUR OWN RACE!</p>
 
-        {inputErrors.name.status && (
-          <p style={{ color: "red" }}>{inputErrors.name.mjs}</p>
-        )}
+          <div className="contenedorCajas">
+            <div className="containerInputs">
+              <label> Name </label>
+              <input
+                onChange={(e) => {
+                  if (e.target.value === "") {
+                    setInputErrors({
+                      ...inputErrors,
+                      name: {
+                        status: true,
+                        mjs: "El campo tiene que estar lleno",
+                      },
+                    });
+                    onChangeInput(e);
+                  } else {
+                    setInputErrors({
+                      ...inputErrors,
+                      name: {
+                        status: false,
+                        mjs: "El campo tiene que estar lleno",
+                      },
+                    });
+                  }
+                  onChangeInput(e);
+                }}
+                name="name"
+                value={input.name}
+                className="inputGeneric"
+              />
 
-        <label> Height </label>
-        <input
-          type="number"
-          onChange={(e) => {
-            setInputErrors({
-              ...inputErrors,
-              minHeight: {
-                status: false,
-                msj: "",
-              },
-            });
+              {inputErrors.name.status && (
+                <p className="error">{inputErrors.name.mjs}</p>
+              )}
 
-            onChangeInput(e);
-          }}
-          name="minHeight"
-          value={input.minHeight}
-          placeholder="MIN"
-        />
-        {inputErrors.minHeight.status && (
-          <p style={{ color: "red" }}>{inputErrors.minHeight.msj}</p>
-        )}
+              <label> Height </label>
+              <div className="containerInputNumber">
+                <input
+                  className="inputGeneric numberInput"
+                  type="number"
+                  onChange={(e) => {
+                    setInputErrors({
+                      ...inputErrors,
+                      minHeight: {
+                        status: false,
+                        msj: "",
+                      },
+                    });
 
-        <input
-          type="number"
-          onChange={onChangeInput}
-          name="maxHeight"
-          value={input.maxHeight}
-          placeholder="MÁX"
-        />
-        <label> Weight </label>
-        <input
-          type="number"
-          onChange={onChangeInput}
-          name="minWeight"
-          value={input.minWeight}
-          placeholder="MIN"
-        />
-        <input
-          type="number"
-          onChange={onChangeInput}
-          name="maxWeight"
-          value={input.maxWeight}
-          placeholder="MÁX"
-        />
-        <label> Life Span </label>
-        <input
-          onChange={onChangeInput}
-          name="lifeSpan"
-          value={input.lifeSpan}
-        />
-
-        <div className="global__container">
-          {/* Caja seleccionados */}
-          <div className="container__options">
-            {optionSelects.map((s) => {
-              return (
-                <ul
-                  onClick={() => {
-                    let rta = optionSelects.filter((p) => p !== s);
-                    setOptionSelects(rta);
+                    onChangeInput(e);
                   }}
-                  className="option__select"
-                >
-                  {s}
-                </ul>
-              );
-            })}
+                  name="minHeight"
+                  value={input.minHeight}
+                  placeholder="MIN"
+                />
+
+                <input
+                  className="inputGeneric numberInput"
+                  type="number"
+                  onChange={onChangeInput}
+                  name="maxHeight"
+                  value={input.maxHeight}
+                  placeholder="MÁX"
+                />
+              </div>
+              {inputErrors.minHeight.status && (
+                <p className="error">{inputErrors.minHeight.msj}</p>
+              )}
+              <label> Weight </label>
+              <div className="containerInputNumber">
+                <input
+                  className="inputGeneric numberInput"
+                  type="number"
+                  onChange={(e) => {
+                    setInputErrors({
+                      ...inputErrors,
+                      minWeight: {
+                        status: false,
+                        msj: "",
+                      },
+                    });
+                    onChangeInput(e);
+                  }}
+                  name="minWeight"
+                  value={input.minWeight}
+                  placeholder="MIN"
+                />
+                <input
+                  className="inputGeneric numberInput"
+                  type="number"
+                  onChange={onChangeInput}
+                  name="maxWeight"
+                  value={input.maxWeight}
+                  placeholder="MÁX"
+                />
+                 
+              </div>
+              {inputErrors.minWeight.status && (
+                <p className="error">{inputErrors.minWeight.msj}</p>
+              )}
+              <label> Life Span </label>
+              <input
+               onChange={(e) => {
+                if (e.target.value === "") {
+                  setInputErrors({
+                    ...inputErrors,
+                    lifeSpan: {
+                      status: true,
+                      mjs: "El campo tiene que estar lleno",
+                    },
+                  });
+                  onChangeInput(e);
+                } else {
+                  setInputErrors({
+                    ...inputErrors,
+                    lifeSpan: {
+                      status: false,
+                      mjs: "El campo tiene que estar lleno",
+                    },
+                  });
+                }
+                onChangeInput(e);
+              }}
+              name="lifeSpan"
+              value={input.lifeSpan}
+              className="inputGeneric"
+              />
+              <div/>
+              {inputErrors.lifeSpan.status && (
+                <p className="error">{inputErrors.lifeSpan.mjs}</p>
+              )}
+              <label> Image URL </label>
+              <input
+                onChange={(e) => {
+                  setInputErrors({
+                    ...inputErrors,
+                    image: {
+                      status: false,
+                      msj: "",
+                    },
+                  });
+                  onChangeInput(e);
+                }}
+                name="image"
+                value={input.image}
+                className="inputGeneric"
+              />
+                 {inputErrors.image.status && (
+                <p className="error">{inputErrors.image.msj}</p>
+              )}
+            </div>
+         
+
+            <div className="segundaCaja">
+              {/* Caja seleccionados */}
+              <div className="container__options">
+                {optionSelects.map((s, i) => {
+                  return (
+                    <ul
+                      key={s + i}
+                      onClick={() => {
+                        let rta = optionSelects.filter((p) => p !== s);
+                        setOptionSelects(rta);
+                      }}
+                      className="option__select"
+                    >
+                      {s}
+                    </ul>
+                  );
+                })}
+              </div>
+
+              {/* Caja opciones*/}
+              <div className="container__options">
+                {temperaments.map((t, i) => {
+                  return (
+                    <ul
+                      key={t + i}
+                      onClick={() => {
+                        let filt = optionSelects.filter((e) => e === t.name);
+
+                        if (filt.length > 0) {
+                          return;
+                        }
+
+                        setOptionSelects([...optionSelects, t.name]);
+                      }}
+                      className="option__select"
+                    >
+                      {t.name}
+                    </ul>
+                  );
+                })}
+              </div>
+            </div>
           </div>
 
-          {/* Caja opciones*/}
-          <div className="container__options">
-            {temperaments.map((t) => {
-              return (
-                <ul
-                  onClick={() => {
-                    setOptionSelects([...optionSelects, t.name]);
-                  }}
-                  className="option__select"
-                >
-                  {t.name}
-                </ul>
-              );
-            })}
-          </div>
-        </div>
-
-        <button type="submit"> CREAR </button>
-      </form>
+          <button className="buttonCreate" type="submit">
+            Create
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
