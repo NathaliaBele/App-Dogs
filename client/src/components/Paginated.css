@@ -19,6 +19,7 @@
     background-color: teal;
     border: none;
     transition:  1s;
+    color: white;
    
 }
 
@@ -26,6 +27,7 @@
     background-color: aliceblue;
     transition:  1s;
     border: solid 1px teal;
+    color: black;
     
 }
 .btnPag > a:hover{

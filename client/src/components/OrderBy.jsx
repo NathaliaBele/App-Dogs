@@ -1,11 +1,10 @@
 import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getDivisionPage,
   getDogsAction,
   getPageDogs,
-  orderByAsc,
   orderByAzAction,
   orderByWeight,
 } from "../redux/dogsDucks";

@@ -1,21 +1,17 @@
-.home{
+.home {}
 
-  
+.container__cards {
+    width: 100%;
+    min-height: 100vh;
+    height: 430;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: auto
 }
 
-.container__cards{
-width: 100%;
-min-height: 100vh;
-height: 430;
-display: flex;
-flex-wrap: wrap;
-justify-content: center;
-margin: auto
-
-}
-
-.navbar{
-    background-color:teal;
+.navbar {
+    background-color: teal;
     width: 100%;
     height: auto;
     display: flex;
@@ -26,7 +22,7 @@ margin: auto
 }
 
 
-.filterNav{
+.filterNav {
     display: flex;
     width: 100%;
     flex-direction: row;
@@ -36,13 +32,23 @@ margin: auto
     background-color: aliceblue;
 }
 
-.paginatorContainer{
+.paginatorContainer {
     width: 100%;
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
 }
 
-.sourceTemp{
-justify-content: space-around;
+.sourceTemp {
+    justify-content: space-around;
+}
+
+.title {
+    height: auto;
+    width: 20vw;
+    display: flex;
+    flex-direction: row;
+    justify-self: flex-start;
+    color: white;
+    margin-right: 25%;
 }

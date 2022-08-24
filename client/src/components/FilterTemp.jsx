@@ -11,7 +11,6 @@ export default function OrderBy() {
   }
 
   useEffect(() => {
-    //console.log('Cambio desde Filter')
   }, [state]);
 
   return (

@@ -8,7 +8,7 @@ import {
 
 
 export default function OrderBy(){
-    const { allDogs } = useSelector((state) => state); //obtener los valores del estado
+    const { allDogs } = useSelector((state) => state); 
     const state = useSelector((state) => state);
     const dispatch = useDispatch()
   

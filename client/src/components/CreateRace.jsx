@@ -107,7 +107,7 @@ export default function CreateRace() {
   async function onHandleSubmit(event) {
     event.preventDefault();
 
-    // validación 1 campos vacios.
+   
 
     for (const key in input) {
           if(input[key].length === 0 ){
@@ -122,6 +122,11 @@ export default function CreateRace() {
           alert('Corrija los errores')
           return
         }
+    }
+
+    if(optionSelects.length <= 0){
+      alert('escoge un temperamento')
+      return;
     }
 
 
@@ -339,6 +344,7 @@ export default function CreateRace() {
                       onClick={() => {
                         let rta = optionSelects.filter((p) => p !== s);
                         setOptionSelects(rta);
+                        if(optionSelects){}
                       }}
                       className="option__select"
                     >

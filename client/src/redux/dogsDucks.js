@@ -21,6 +21,7 @@ const GET_TEMPERAMENTS = 'GET_TEMPERAMENTS'
 const FILTER_TEMPERAMENTS = 'FILTER_TEMPERAMENTS'
 const FILTER_AZ = 'FILTER_AZ'
 const CHANGE_PAGE = 'CHANGE_PAGE'
+
 //reducers
 export default function dogsReducer(state = dataInitial, action) {
     switch (action.type) {
@@ -63,8 +64,8 @@ export default function dogsReducer(state = dataInitial, action) {
 
 //acciones
 export const getDogsAction = (rta) => (dispatch) => {
-
-    let body = rta.map(r=>r)
+    console.log(rta);
+    let body = rta.map(r => r)
 
     try {
         dispatch({
@@ -94,10 +95,9 @@ export const getDivisionPage = (dogs) => (dispatch) => {
     }
 }
 
-export const getPageDogs = (currentPageP, doggies) => (dispatch) => { //OBTENER CADA PAGINA, y mandar los 8 perros
+export const getPageDogs = (currentPageP, doggies) => (dispatch) => {
     let update = [];
     for (let i = currentPageP * 8; i < currentPageP * 8 + 8; i++) {
-        // console.log(i);
         update.push(doggies[i]);
     }
 
@@ -219,7 +219,6 @@ export const getTemperaments = () => async (dispatch) => {
 }
 
 export const filterByTemperaments = (dogs, option) => async (dispatch) => {
-    // console.log(dogs);
     const doggy = dogs.map((d) => {
         if (d.temperament !== undefined) {
             let arrStr = d.temperament.split(',')
@@ -284,3 +283,4 @@ export const newCurrentPage = (p) => (dispatch) => {
         }
     )
 }
+

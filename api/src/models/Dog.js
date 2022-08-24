@@ -35,6 +35,9 @@ module.exports = (sequelize) => {
     originApi: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
+    },
+    breed_group:{
+      type: DataTypes.STRING()
     }
   });
 };

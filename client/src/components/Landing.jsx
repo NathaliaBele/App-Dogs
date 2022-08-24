@@ -9,6 +9,7 @@ export default function Landing() {
       <div className="caja1"></div>
 
       <div className="caja2">
+      <div className="welcome">Welcome to World of Doggys</div>
         <button className="button-landing">
           <Link to="/home">Get Started</Link>
         </button>

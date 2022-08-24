@@ -2,7 +2,7 @@ import React from "react";
 import { Card } from "./Card";
 import Nav from "./Nav";
 import SearchBar from "./SearchBar";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getDogsAction,
@@ -14,38 +14,22 @@ import {
 import "./Home.css";
 import Paginated from "./Paginated";
 import OrderBy from "./OrderBy";
-import Filter from "./Filter";
-//useSelector,
 
 export default function Home() {
-  // traer los perros de redux para utilizarlo en el componente
-  //contenedor perros.  //asignar la inf. le asigna el valor a get dogs.
-  //useState da la funcionalidad para contener y asignar
-
   const state = useSelector((state) => state);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getTemperaments());
 
-    /*async function fetchData() {
-      const respuesta = await fetch("http://localhost:3001/dogs");
-      const body = await respuesta.json();
-      dispatch(getDogsAction(body));
-      dispatch(allDogGlobal(body));
-    }
-    fetchData();
-*/
-
     fetch("http://localhost:3001/dogs").then((r) =>
       r.json().then((rta) => {
         dispatch(getDogsAction(rta));
-        
-          dispatch(allDogGlobal()); //despacha al estado global
 
+        dispatch(allDogGlobal());
       })
     );
-  }, []); //que se ejecute antes que renderize el componente
+  }, []);
 
   useEffect(() => {
     dispatch(getPageDogs(state.currentPageGlobal, state.allDogs));
@@ -55,6 +39,9 @@ export default function Home() {
   return (
     <div className="home">
       <div className="navbar">
+        <div className="title">
+          <h1>World of Doggys</h1>
+        </div>
         <SearchBar />
         <Nav />
       </div>

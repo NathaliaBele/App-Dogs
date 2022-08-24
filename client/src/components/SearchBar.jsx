@@ -1,15 +1,19 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useState} from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { getDogsByNameAction } from "../redux/dogsDucks";
 import "./SearchBar.css";
 export default function SearchBar() {
   const [search, setSearch] = useState("");
   let dispatch = useDispatch();
+  const state = useSelector((state) => state);
+
+
 
   function onSubmit(e) {
     e.preventDefault();
     dispatch(getDogsByNameAction(search));
     setSearch("");
+    setSearch(state.allGlobalDogs)
   }
   function onInputChange(e) {
     e.preventDefault();

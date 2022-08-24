@@ -21,6 +21,7 @@ router.get('/', async (req, res) => {
                     temperament: e.temperament,
                     lifeSpan: e.life_span,
                     originApi: true,
+
                 }
             })
 
@@ -30,25 +31,6 @@ router.get('/', async (req, res) => {
             })
         })
 
-        /*
-                const { data } = await axios.get('https://api.thedogapi.com/v1/breeds')
-                // console.log(data)
-                const allDogs = data.map(e => {
-                    return {
-                        id: e.id,
-                        name: e.name,
-                        image: e.image.url,
-                        height: e.height.metric,
-                        weight: e.weight.metric,
-                        temperament: e.temperament,
-                        lifeSpan: e.life_span,
-                        originApi: true,
-                    }
-                })
-        
-                const dogsDB = await Dog.findAll()
-                return res.json([...allDogs, ...dogsDB]);
-    */
     } else {
         const { data } = await axios.get('https://api.thedogapi.com/v1/breeds')
         const byName = data.filter(dog => {
@@ -103,7 +85,7 @@ router.get('/:id', async (req, res) => {
             arr.push(property)
         }
     }
-//qué es la propiedad?
+    //qué es la propiedad?
 
     const { data } = await axios.get('https://api.thedogapi.com/v1/breeds')
     const id = req.params.id
@@ -133,7 +115,8 @@ router.get('/:id', async (req, res) => {
             height: e.height.metric,
             weight: e.weight.metric,
             temperament: e.temperament,
-            lifeSpan: e.life_span
+            lifeSpan: e.life_span,
+
         }
 
 
@@ -174,7 +157,7 @@ router.post('/', async (req, res) => {
 
     const recibirRaza = req.body
 
-   
+
 
     let act = await Dog.create({
         name: recibirRaza.name,
@@ -184,6 +167,7 @@ router.post('/', async (req, res) => {
         temperament: recibirRaza.temperament,
         lifeSpan: recibirRaza.lifeSpan,
         originApi: false,
+
     });
 
     //let cons = await Dog.findAll()
@@ -193,24 +177,18 @@ router.post('/', async (req, res) => {
 
 })
 
-
-
-
 router.delete('/:id', async (req, res) => {
 
     let { id } = req.params
 
-    let rta = await Dog.destroy({
+    let result = await Dog.destroy({
+
         where: {
             id: id
         }
-    }
-    )
-
-    res.json(rta)
-
-});
-
+    })
+    res.send('Prueba')
+})
 
 router.put('/:id', async (req, res) => {
 
@@ -231,5 +209,6 @@ router.put('/:id', async (req, res) => {
     res.json(rta)
 
 });
+
 
 module.exports = router;

@@ -15,13 +15,13 @@ router.get('/', async (req, res) => {
 
         const { data } = await axios.get('https://api.thedogapi.com/v1/breeds')
         let temp = data.map(c => {
-            return c.temperament // arreglo de strings.
+            return c.temperament 
         })
-        let conv = temp.toString().split(","); //se convierte en un string  y luego en un arreglo.
+        let conv = temp.toString().split(","); 
         let quitarEs = conv.map(e => {
             return e.trim();
         })
-        const result = quitarEs.filter((item, index) => {//quitar los repetidos
+        const result = quitarEs.filter((item, index) => {
             return quitarEs.indexOf(item) === index;
         })
 
